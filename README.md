@@ -28,9 +28,11 @@ Class.forName("oracle.jdbc.driver.OracleDriver");
 - **Creating connection:**
 The getConnection() method of DriverManager class is used to establish the connection with the database. The syntax of the getConnection() method is given below.
 
-- 1) **public static** Connection getConnection(String url)**throws** SQLException  
-- 2) **public static** Connection getConnection(String url,String name,String password)  
-**throws** SQLException
+```
+- 1) public static Connection getConnection(String url) throws SQLException  
+- 2) public static Connection getConnection(String url,String name,String password)  
+throws SQLException
+```
 
 Consider the following example to establish the connection with the Oracle database.
 ```
