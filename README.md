@@ -263,3 +263,234 @@ Driver Version: 10.2.0.1.0XE
 Database Product Name: Oracle
 Database Product Version: Oracle Database 10g Express Edition Release 10.2.0.1.0 -Production
 ```
+
+## 19- Which interface is responsible for transaction management in JDBC?
+The Connection interface provides methods for transaction management such as commit(), rollback() etc.
+
+## 20- What is batch processing and how to perform batch processing in JDBC?
+By using the batch processing technique in JDBC, we can execute multiple queries. It makes the performance fast. The java.sql.Statement and java.sql.PreparedStatement interfaces provide methods for batch processing. The batch processing in JDBC requires the following steps.
+
+- Load the driver class
+- Create Connection
+- Create Statement
+- Add query in the batch
+- Execute the Batch
+- Close Connection
+
+Consider the following example to perform batch processing using the Statement interface.
+```
+import java.sql.*;  
+class FetchRecords{  
+public static void main(String args[])throws Exception{  
+Class.forName("oracle.jdbc.driver.OracleDriver");  
+Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","system","oracle");  
+con.setAutoCommit(false);  
+  
+Statement stmt=con.createStatement();  
+stmt.addBatch("insert into user420 values(190,'abhi',40000)");  
+stmt.addBatch("insert into user420 values(191,'umesh',50000)");  
+  
+stmt.executeBatch();//executing the batch  
+  
+con.commit();  
+con.close();  
+}}  
+```
+
+## 21- What are CLOB and BLOB data types in JDBC?
+**BLOB:** Blob can be defined as the variable-length, binary large object which is used to hold the group of Binary data such as voice, images, and mixed media. It can hold up to 2GB data on MySQL database and 128 GB on Oracle database. BLOB is supported by many databases such as MySQL, Oracle, and DB2 to store the binary data (images, video, audio, and mixed media).
+
+**CLOB:** Clob can be defined as the variable-length, character-large object which is used to hold the character-based data such as files in many databases. It can hold up to 2 GB on MySQL database, and 128 GB on Oracle Database. A CLOB is considered as a character string.
+
+## 22- What are the different types of lockings in JDBC?
+A lock is a certain type of software mechanism by using which, we can restrict other users from using the data resource. There are four type of locks given in JDBC that are described below.
+
+- **Row and Key Locks:** These type of locks are used when we update the rows.
+- **Page Locks:** These type of locks are applied to a page. They are used in the case, where a transaction remains in the process and is being updated, deleting, or inserting some data in a row of the table. The database server locks the entire page that contains the row. The page lock can be applied once by the database server.
+- **Table locks:** Table locks are applied to the table. It can be applied in two ways, i.e., shared and exclusive. Shared lock lets the other transactions to read the table but not update it. However, The exclusive lock prevents others from reading and writing the table.
+- **Database locks:** The Database lock is used to prevent the read and update access from other transactions when the database is open.
+
+## 23- How can we store and retrieve images from the database?
+By using the PreparedStatement interface, we can store and retrieve images. Create a table which contains two columns namely NAME and PHOTO.
+```
+CREATE TABLE  "IMGTABLE"   
+   (    "NAME" VARCHAR2(4000),   
+    "PHOTO" BLOB  
+   )  
+```   
+Consider the following example to store the image in the database.
+```
+import java.sql.*;  
+import java.io.*;  
+public class InsertImage {  
+public static void main(String[] args) {  
+try{  
+Class.forName("oracle.jdbc.driver.OracleDriver");  
+Connection con=DriverManager.getConnection(  
+"jdbc:oracle:thin:@localhost:1521:xe","system","oracle");  
+              
+PreparedStatement ps=con.prepareStatement("insert into imgtable values(?,?)");  
+ps.setString(1,"sonoo");  
+  
+FileInputStream fin=new FileInputStream("d:\\g.jpg");  
+ps.setBinaryStream(2,fin,fin.available());  
+int i=ps.executeUpdate();  
+System.out.println(i+" records affected");  
+          
+con.close();  
+}catch (Exception e) {e.printStackTrace();}  
+}  
+}  
+```   
+Consider the following example to retrieve the image from the table.
+```
+import java.sql.*;  
+import java.io.*;  
+public class RetrieveImage {  
+public static void main(String[] args) {  
+try{  
+Class.forName("oracle.jdbc.driver.OracleDriver");  
+Connection con=DriverManager.getConnection(  
+"jdbc:oracle:thin:@localhost:1521:xe","system","oracle");  
+      
+PreparedStatement ps=con.prepareStatement("select * from imgtable");  
+ResultSet rs=ps.executeQuery();  
+if(rs.next()){//now on 1st row  
+              
+Blob b=rs.getBlob(2);//2 means 2nd column data  
+byte barr[]=b.getBytes(1,(int)b.length());//1 means first image  
+              
+FileOutputStream fout=new FileOutputStream("d:\\sonoo.jpg");  
+fout.write(barr);  
+              
+fout.close();  
+}//end of if  
+System.out.println("ok");  
+              
+con.close();  
+}catch (Exception e) {e.printStackTrace();  }  
+}  
+}  
+```   
+
+## 24- How can we store the file in the Oracle database?
+The setCharacterStream() method of PreparedStatement interface is used to set character information into the parameterIndex. For storing the file into the database, CLOB (Character Large Object) datatype is used in the table. For example:
+
+```CREATE TABLE  "FILETABLE" ("ID" NUMBER,  "NAME" CLOB )```
+   
+Java Code
+
+```
+import java.io.*;  
+import java.sql.*;  
+  
+public class StoreFile {  
+public static void main(String[] args) {  
+try{  
+Class.forName("oracle.jdbc.driver.OracleDriver");  
+Connection con=DriverManager.getConnection(  
+"jdbc:oracle:thin:@localhost:1521:xe","system","oracle");  
+              
+PreparedStatement ps=con.prepareStatement(  
+"insert into filetable values(?,?)");  
+              
+File f=new File("d:\\myfile.txt");  
+FileReader fr=new FileReader(f);  
+              
+ps.setInt(1,101);  
+ps.setCharacterStream(2,fr,(int)f.length());  
+int i=ps.executeUpdate();  
+System.out.println(i+" records affected");  
+              
+con.close();  
+              
+}catch (Exception e) {e.printStackTrace();}  
+}  
+}
+```
+
+## 25- How can we retrieve the file in the Oracle database?
+The getClob() method of PreparedStatement is used to get file information from the database. Let's see the table structure of the example to retrieve the file.
+
+```CREATE TABLE "FILETABLE" ("ID" NUMBER, "NAME" CLOB )```
+
+The example to retrieve the file from the Oracle database is given below.
+
+```
+import java.io.*;  
+import java.sql.*;  
+  
+public class RetrieveFile {  
+public static void main(String[] args) {  
+try{  
+Class.forName("oracle.jdbc.driver.OracleDriver");  
+Connection con=DriverManager.getConnection(  
+"jdbc:oracle:thin:@localhost:1521:xe","system","oracle");  
+              
+PreparedStatement ps=con.prepareStatement("select * from filetable");  
+ResultSet rs=ps.executeQuery();  
+rs.next();//now on 1st row  
+              
+Clob c=rs.getClob(2);  
+Reader r=c.getCharacterStream();              
+              
+FileWriter fw=new FileWriter("d:\\retrivefile.txt");  
+              
+int i;  
+while((i=r.read())!=-1)  
+fw.write((char)i);  
+              
+fw.close();  
+con.close();  
+              
+System.out.println("success");  
+}catch (Exception e) {e.printStackTrace();  }  
+}  
+}
+```
+
+## 26- What are the differences between stored procedure and functions?
+The differences between stored procedures and functions are given below:
+| Stored Procedure | Function |
+| ----------- | ----------- |
+| Is used to perform business logic. | Is used to perform the calculation. |
+| Must not have the return type. | Must have the return type. |
+| May return 0 or more values. | May return only one value. |
+| The procedure supports input and output parameters.	| The function supports only input parameter. |
+| Exception handling using try/catch block can be used in stored procedures. | Exception handling using try/catch can't be used in user-defined functions. |
+
+## 27- How can we maintain the integrity of a database by using JDBC?
+To maintain the integrity of a database, we need to ensure the ACID properties. ACID properties mean Atomicity, Consistency, Isolation, and durability. In JDBC, Connection interface provides methods like setAutoCommit(), commit(), and rollback() which can be used to manage transaction. Let's see an example of transaction management in JDBC.
+```
+import java.sql.*;  
+class FetchRecords{  
+public static void main(String args[])throws Exception{  
+Class.forName("oracle.jdbc.driver.OracleDriver");  
+Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","system","oracle");  
+con.setAutoCommit(false);  
+  
+Statement stmt=con.createStatement();  
+stmt.executeUpdate("insert into user420 values(190,'abhi',40000)");  
+stmt.executeUpdate("insert into user420 values(191,'umesh',50000)");  
+  
+con.commit();  
+con.close();  
+}}  
+```
+
+## 28- What is the JDBC Rowset?
+JDBC Rowset is the wrapper of ResultSet. It holds tabular data like ResultSet, but it is easy and flexible to use. The implementation classes of RowSet interface are as follows:
+
+- JdbcRowSet
+- CachedRowSet
+- WebRowSet
+- JoinRowSet
+- FilteredRowSet
+
+## 29- What is the major difference between java.util.Date and java.sql.Date data type?
+The major difference between java.util.Date and java.sql.Date is that, java.sql.Date represents date without time information whereas, java.util.Date represents both date and time information.
+
+## 30- What does JDBC setMaxRows method do?
+The setMaxRows(int i) method limits the number of rows the database can return by using the query. This can also be done within the query as we can use the limit cause in MySQL.
+
+
