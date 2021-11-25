@@ -106,3 +106,42 @@ The java.sql package contains following interfaces and classes for JDBC API.
 - **Clob:** Clob stands for Character large object. It is a data type that is used by various database management systems to store character files. It is similar to Blob except for the difference that BLOB represent binary data such as images, audio and video files, etc. whereas Clob represents character stream data such as character files, etc.
 
 - **SQLException** It is an Exception class which provides information on database access errors.
+
+## 5- What are the JDBC statements?
+In JDBC, Statements are used to send SQL commands to the database and receive data from the database. There are various methods provided by JDBC statements such as execute(), executeUpdate(), executeQuery, etc. which helps you to interact with the database.
+
+There is three type of JDBC statements given in the following table.
+| Statements | Explanation |
+| ----------- | ----------- |
+| Statement | Statement is the factory for resultset. It is used for general purpose access to the database. It executes a static SQL query at runtime. |
+| PreparedStatement	| The PreparedStatement is used when we need to provide input parameters to the query at runtime. |
+| CallableStatement | CallableStatement is used when we need to access the database stored procedures. It can also accept runtime parameters. |
+
+## 6- What is the return type of Class.forName() method?
+The Class.forName() method returns the object of java.lang.Class object.
+
+## 7- What are the differences between Statement and PreparedStatement interface?
+| Statements | PreparedStatement |
+| ----------- | ----------- |
+| The Statement interface provides methods to execute queries with the database. The statement interface is a factory of ResultSet; i.e., it provides the factory method to get the object of ResultSet. | The PreparedStatement interface is a subinterface of Statement. It is used to execute the parameterized query. |
+| In the case of Statement, the query is compiled each time we run the program.	| In the case of PreparedStatement, the query is compiled only once. |
+| The Statement is mainly used in the case when we need to run the static query at runtime.	| PreparedStatement is used when we need to provide input parameters to the query at runtime. |
+
+## 8- How can we set null value in JDBC PreparedStatement?
+By using setNull() method of PreparedStatement interface, we can set the null value to an index. The syntax of the method is given below.
+```
+void setNull(int parameterIndex, int sqlType) throws SQLException  
+```
+
+## 9- What are the benefits of PreparedStatement over Statement?
+The benefits of using PreparedStatement over Statement interface is given below.
+
+- The PreparedStatement performs faster as compare to Statement because the Statement needs to be compiled everytime we run the code whereas the PreparedStatement compiled once and then execute only on runtime.
+- PreparedStatement can execute Parameterized query whereas Statement can only run static queries.
+- The query used in PreparedStatement is appeared to be similar every time. Therefore, the database can reuse the previous access plan whereas, Statement inline the parameters into the String, therefore, the query doesn't appear to be same everytime which prevents cache reusage.
+
+## 10- What are the differences between execute, executeQuery, and executeUpdate?
+| execute | executeQuery | executeUpdate |
+| ----------- | ----------- | ----------- |
+| The execute method can be used for any SQL statements(Select and Update both). | The executeQuery method can be used only with the select statement. | The executeUpdate method can be used to update/delete/insert operations in the database. |
+| The execute method returns a boolean type value where true indicates that the ResultSet s returned which can later be extracted and false indicates that the integer or void value is returned.	 | The executeQuery() method returns a ResultSet object which contains the data retrieved by the select statement. | The executeUpdate() method returns an integer value representing the number of records affected where 0 indicates that query returns nothing. |
