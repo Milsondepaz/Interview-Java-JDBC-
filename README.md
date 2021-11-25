@@ -145,3 +145,77 @@ The benefits of using PreparedStatement over Statement interface is given below.
 | ----------- | ----------- | ----------- |
 | The execute method can be used for any SQL statements(Select and Update both). | The executeQuery method can be used only with the select statement. | The executeUpdate method can be used to update/delete/insert operations in the database. |
 | The execute method returns a boolean type value where true indicates that the ResultSet s returned which can later be extracted and false indicates that the integer or void value is returned.	 | The executeQuery() method returns a ResultSet object which contains the data retrieved by the select statement. | The executeUpdate() method returns an integer value representing the number of records affected where 0 indicates that query returns nothing. |
+
+## 11- What are the different types of ResultSet?
+ResultSet is categorized by the direction of the reading head and sensitivity or insensitivity of the result provided by it. There are three general types of ResultSet.
+| Type | Description |
+| ----------- | ----------- |
+| ResultSet.TYPE_Forward_ONLY	| The cursor can move in the forward direction only. |
+| ResultSet.TYPE_SCROLL_INSENSITIVE	| The cursor can move in both the direction (forward and backward). The ResultSet is not sensitive to the changes made by the others to the database. |
+| ResultSet.TYPE_SCROLL_SENSITIVE	 | The cursor can move in both the direction. The ResultSet is sensitive to the changes made by the others to the database. |
+
+## 12- The cursor can move in both the direction. The ResultSet is sensitive to the changes made by the others to the database.
+| ResultSet | RowSet |
+| ----------- | ----------- |
+| ResultSet cannot be serialized as it maintains the connection with the database. | RowSet is disconnected from the database and can be serialized. |
+| ResultSet object is not a JavaBean object | ResultSet Object is a JavaBean object. |
+| ResultSet is returned by the executeQuery() method of Statement Interface. | Rowset Interface extends ResultSet Interface and returned by calling the RowSetProvider.newFactory().createJdbcRowSet() method. |
+| ResultSet object is non-scrollable and non-updatable by default. | RowSet object is scrollable and updatable by default. |
+
+## 13- How can we execute stored procedures using CallableStatement?
+Following are the steps to create and execute stored procedures. Here, we are creating a table user420 by using a stored procedure and inserting values into it.
+
+- **Create the procedure in the database.**
+To call the stored procedure, you need to create it in the database. Here, we are assuming that the stored procedure looks like this.
+```
+create or replace procedure "INSERTR"  
+(id IN NUMBER,  
+name IN VARCHAR2)  
+is  
+begin  
+insert into user420 values(id,name);  
+end;  
+/     
+The table structure is given below:
+
+create table user420(id number(10), name varchar2(200));  
+```
+
+- **Establish a network connection.**
+```
+Class.forName("oracle.jdbc.driver.OracleDriver");  
+Connection con=DriverManager.getConnection(  
+"jdbc:oracle:thin:@localhost:1521:xe","system","oracle");  
+```
+
+- **Create the Object of CallableStatement.**
+```
+CallableStatement stmt=con.prepareCall("{call insertR(?,?)}");  
+```
+
+- **Provide the values and execute the query by using the following syntax.**
+```
+stmt.setInt(1,1011);  
+stmt.setString(2,"Amit");  
+stmt.execute();  
+```
+
+- **Check the database; the values will be found there. However, the complete code will look like the following.**
+```
+import java.sql.*;  
+public class Proc {  
+public static void main(String[] args) throws Exception{  
+  
+Class.forName("oracle.jdbc.driver.OracleDriver");  
+Connection con=DriverManager.getConnection(  
+"jdbc:oracle:thin:@localhost:1521:xe","system","oracle");  
+  
+CallableStatement stmt=con.prepareCall("{call insertR(?,?)}");  
+stmt.setInt(1,1011);  
+stmt.setString(2,"Amit");  
+stmt.execute();  
+  
+System.out.println("success");  
+}  
+}
+```
