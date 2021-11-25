@@ -219,3 +219,47 @@ System.out.println("success");
 }  
 }
 ```
+
+## 14- What is the role of the JDBC DriverManager class?
+The DriverManager class acts as an interface between user and drivers. It keeps track of the drivers that are available and handles establishing a connection between a database and the appropriate driver. The DriverManager class maintains a list of Driver classes that have registered themselves by calling the method DriverManager.registerDriver().
+
+## 15- What are the functions of the JDBC Connection interface?
+The **Connection interface** maintains a session with the database. It can be used for transaction management. It provides factory methods that return the instance of Statement, PreparedStatement, CallableStatement, and DatabaseMetaData.
+
+## 16- What does the JDBC ResultSet interface?
+The ResultSet object represents a row of a table. It can be used to change the cursor pointer and get the information from the database. By default, ResultSet object can move in the forward direction only and is not updatable. However, we can make this object to move the forward and backward direction by passing either TYPE_SCROLL_INSENSITIVE or TYPE_SCROLL_SENSITIVE in createStatement(int, int) method.
+
+## 17- What does the JDBC ResultSetMetaData interface?
+The ResultSetMetaData interface returns the information of table such as the total number of columns, column name, column type, etc.
+
+## 18- What does the JDBC DatabaseMetaData interface?
+The DatabaseMetaData interface returns the information of the database such as username, driver name, driver version, number of tables, number of views, etc. Consider the following example.
+```
+import java.sql.*;  
+class Dbmd{  
+public static void main(String args[]){  
+try{  
+Class.forName("oracle.jdbc.driver.OracleDriver");  
+  
+Connection con=DriverManager.getConnection(  
+"jdbc:oracle:thin:@localhost:1521:xe","system","oracle");  
+DatabaseMetaData dbmd=con.getMetaData();  
+  
+System.out.println("Driver Name: "+dbmd.getDriverName());  
+System.out.println("Driver Version: "+dbmd.getDriverVersion());  
+System.out.println("UserName: "+dbmd.getUserName());  
+System.out.println("Database Product Name: "+dbmd.getDatabaseProductName());  
+System.out.println("Database Product Version: "+dbmd.getDatabaseProductVersion());  
+  
+con.close();  
+}catch(Exception e){ System.out.println(e);}  
+}  
+} 
+
+Output
+
+Driver Name: Oracle JDBC Driver
+Driver Version: 10.2.0.1.0XE
+Database Product Name: Oracle
+Database Product Version: Oracle Database 10g Express Edition Release 10.2.0.1.0 -Production
+```
