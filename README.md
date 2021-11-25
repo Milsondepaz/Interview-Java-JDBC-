@@ -1,20 +1,23 @@
 # Java JDBC Interview Questions
 
-## 2- What is JDBC?
+## 1- What is JDBC?
 JDBC is a Java API that is used to connect and execute the query to the database. JDBC API uses JDBC drivers to connect to the database. JDBC API can be used to access tabular data stored into any relational database.
 
 ![image](https://user-images.githubusercontent.com/16039211/143330285-f2d80176-733b-490f-9362-5bf4d8f2aec5.png)
 
 
-## 3- What is JDBC Driver?
+## 2- What is JDBC Driver?
 JDBC Driver is a software component that enables Java application to interact with the database. There are 4 types of JDBC drivers:
 
 **JDBC-ODBC bridge driver:** The JDBC-ODBC bridge driver uses the ODBC driver to connect to the database. The JDBC-ODBC bridge driver converts JDBC method calls into the ODBC function calls. This is now discouraged because of the thin driver. It is easy to use and can be easily connected to any database.
+
 **Native-API driver (partially java driver):** The Native API driver uses the client-side libraries of the database. The driver converts JDBC method calls into native calls of the database API. It is not written entirely in Java. Its performance is better than JDBC-ODBC bridge driver. However, the native driver must be installed on each client machine.
+
 **Network Protocol driver (fully java driver):** The Network Protocol driver uses middleware (application server) that converts JDBC calls directly or indirectly into the vendor-specific database protocol. It is entirely written in Java. There is no requirement of the client-side library because of the application server that can perform many tasks like auditing, load balancing, logging, etc.
+
 **Thin driver (fully java driver):** The thin driver converts JDBC calls directly into the vendor-specific database protocol. That is why it is known as the thin driver. It is entirely written in Java language. Its performance is better than all other drivers however these drivers depend upon the database.
 
-## 4- What are the steps to connect to the database in java?
+## 3- What are the steps to connect to the database in java?
 The following steps are used in database connectivity.
 - **Registering the driver class:**
 The forName() method of the Class class is used to register the driver class. This method is used to load the driver class dynamically. Consider the following example to register OracleDriver class.
